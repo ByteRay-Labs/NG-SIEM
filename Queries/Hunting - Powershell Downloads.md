@@ -79,15 +79,15 @@ Start-BitsTransfer -Source "http://..." -Destination "C:\..." -Asynchronous
 ## Verschleierungstechniken (MITRE ATT&CK T1027)
 Angreifer verschleiern PowerShell-Befehle und -Skripte, um signaturbasierte Erkennungssysteme zu umgehen und die Analyse zu erschweren. Gängige Methoden umfassen:   
 
-* Kodierung: Verwendung von Base64 (-EncodedCommand, -e, -ec), Hexadezimal oder ASCII zur Darstellung von Befehlen oder Skriptblöcken.   
-* Zeichenkettenmanipulation: Verketten ("Down" + "loadString"), Neuanordnen ("{1}{0}" -f 'String','Download') oder Ersetzen von Zeichen innerhalb von Zeichenketten, um bekannte Muster zu zerlegen.   
+* Kodierung: Verwendung von Base64 (`-EncodedCommand`, `-e`, `-ec`), Hexadezimal oder ASCII zur Darstellung von Befehlen oder Skriptblöcken.   
+* Zeichenkettenmanipulation: Verketten (`"Down" + "loadString"`), Neuanordnen (`"{1}{0}" -f 'String','Download'`) oder Ersetzen von Zeichen innerhalb von Zeichenketten, um bekannte Muster zu zerlegen.   
 * Variablenverschleierung: Verwendung unklarer Variablennamen oder das schrittweise Zusammenbauen von Befehlen in Variablen.   
 * Escape-Zeichen: Einsatz von Backticks (`) innerhalb von Zeichenketten oder Befehlen, um die Lesbarkeit zu beeinträchtigen.   
 * Zufällige Groß-/Kleinschreibung: Mischen von Groß- und Kleinbuchstaben.   
 * Leerraum/Kommentare: Einfügen unnötiger Leerzeichen oder Kommentare.   
-* Befehlsaliase/Kurznamen: Verwendung von Aliasen wie IEX für Invoke-Expression oder IWR für Invoke-WebRequest.   
+* Befehlsaliase: Verwendung von Aliasen wie `IEX` für `Invoke-Expression` oder `IWR` für `Invoke-WebRequest`.   
 * Umgebungsvariablen: Verstecken von Teilen des Codes in Umgebungsvariablen.   
-* Typnamenverkürzung: Verwendung von Net.WebClient anstelle von System.Net.WebClient.
+* Typnamenverkürzung: Verwendung von `Net.WebClient` anstelle von `System.Net.WebClient`.
 
 Für einige dieser Methoden haben wir eine separate Query erstellt, um gezielt nach Powershell Obfuscation zu suchen. 
 
