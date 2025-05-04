@@ -1,4 +1,15 @@
 # Rare Powershell Parents
+
+## Warum Powershell für Angreifer interessant ist
+Powershell ist ein fester Bestandteil moderner Windows-Systeme und bietet durch .NET-Anbindung mächtige Möglichkeiten zur Automatisierung. Diese Eigenschaften machen es auch für Angreifer attraktiv:
+
+- Auf jedem Windows-System vorhanden (kein zusätzlicher Code nötig)
+- Direkter Zugriff auf Windows-APIs und Netzwerkressourcen
+- Kann Code aus dem Speicher ausführen (fileless execution)
+- Oft unzureichend überwacht oder eingeschränkt
+
+**Living off the Land**-Taktiken nutzen Powershell, um Angriffe unauffällig und ohne zusätzliche Tools durchzuführen.
+
 ## Warum ungewöhnliche Powershell Parent-Prozesse ein Risiko darstellen
 Der Kontext eines Powershell Prozesses kann auf einen möglichen Missbrauch von Powershell hinweisen. Nachfolgend beschreiben wir, in welchen Fällen die Prozessbeziehungen von Powershell verdächtig sind und wie wir mit CrowdStrike NextGen SIEM nach verdächtigen Prozessbeziehnugnen suchen. 
 
