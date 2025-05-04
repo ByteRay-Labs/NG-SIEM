@@ -1,9 +1,11 @@
+![Image](https://github.com/user-attachments/assets/e9b7cd77-dc64-46c7-82b8-c5b652acdc60)
+
 # Willkommen bei ByteRay Labs
 Hier teilen wir praxisbewährte Inhalte wie etwa SIEM-Queries aus unserem umfassenden Use-Case-Katalog, die wir in verschiedensten Kundenumgebungen erfolgreich getestet und validiert haben.
 Wir möchten die tägliche Arbeit von Security-Teams erleichtern und die Effektivität von CrowdStrike NG-SIEM bzw. Falcon LogScale in realen Einsatzszenarien steigern. Unser Schwerpunkt liegt dabei auf Detection Engineering und Threat Hunting. 
 
 ## Powershell Hunting Queries
-Im Rahmen unserer Arbeit mit CrowdStrike NextGen SIEM haben wir ein Set von vier spezialisierten PowerShell-Hunting-Queries veröffentlicht. Diese helfen dabei, verdächtige Aktivitäten im Umfeld von PowerShell effektiv zu identifizieren und einzuordnen – ein häufig genutztes Einfallstor bei modernen Angriffen.
+Im Rahmen unserer Arbeit mit CrowdStrike NextGen SIEM haben wir ein Set von spezialisierten Powershell-Hunting-Queries veröffentlicht. Diese helfen dabei, verdächtige Aktivitäten im Umfeld von PowerShell effektiv zu identifizieren und einzuordnen.
 
 Die veröffentlichten Queries decken folgende Szenarien ab:
 
