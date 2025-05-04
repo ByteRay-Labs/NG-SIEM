@@ -1,38 +1,38 @@
 # Powershell Threat Hunting: Downloads erkennen mit NextGen SIEM
 
-## Warum PowerShell für Angreifer interessant ist
+## Warum Powershell für Angreifer interessant ist
 
-PowerShell ist ein fester Bestandteil moderner Windows-Systeme und bietet durch .NET-Anbindung mächtige Möglichkeiten zur Automatisierung. Diese Eigenschaften machen es auch für Angreifer attraktiv:
+Powershell ist ein fester Bestandteil moderner Windows-Systeme und bietet durch .NET-Anbindung mächtige Möglichkeiten zur Automatisierung. Diese Eigenschaften machen es auch für Angreifer attraktiv:
 
 - Auf jedem Windows-System vorhanden (kein zusätzlicher Code nötig)
 - Direkter Zugriff auf Windows-APIs und Netzwerkressourcen
-- Kann Code aus dem Speicher ausführen (*fileless execution*)
+- Kann Code aus dem Speicher ausführen (fileless execution)
 - Oft unzureichend überwacht oder eingeschränkt
 
-**Living off the Land**-Taktiken nutzen PowerShell, um Angriffe unauffällig und ohne zusätzliche Tools durchzuführen.
+**Living off the Land**-Taktiken nutzen Powershell, um Angriffe unauffällig und ohne zusätzliche Tools durchzuführen.
 
 ---
 
-## Warum nach PowerShell-Downloads suchen?
-PowerShell wird häufig verwendet, um Dateien oder Skripte aus dem Internet zu laden – z. B. zur:
+## Warum nach Powershell-Downloads suchen?
+Powershell wird häufig verwendet, um Dateien oder Skripte aus dem Internet zu laden z. B. zur:
 
 - Nachladung von Schadsoftware 
 - Kommunikation mit Command-and-Control-Servern
 - Umgehung traditioneller Sicherheitsmaßnahmen 
 
-Einige Gründe für die proaktive Suche nach PowerShell-Downloads:
+Einige Gründe für die proaktive Suche nach Powershell-Downloads:
 
 - Früherkennung von Angriffen im Initial Access oder Execution-Phase
 - Erkennung von Fileless Malware
 
 ---
 
-## Download via PowerShell
+## Download via Powershell
 
-Angreifer nutzen verschiedene Techniken, um Inhalte via PowerShell herunterzuladen. 
+Angreifer nutzen verschiedene Techniken, um Inhalte via Powershell herunterzuladen. 
 
 ### `Invoke-WebRequest` (IWR)
-* Funktionalität: Dieses Cmdlet, verfügbar ab PowerShell Version 3, fungiert ähnlich wie `wget` oder `curl` unter Linux. Es sendet HTTP-, HTTPS- oder FTP-Anfragen an eine angegebene URL und kann die Antwort verarbeiten oder, mithilfe des Parameters `-OutFile`, direkt in eine Datei speichern. Es unterstützt komplexere Webinteraktionen wie Authentifizierung und benutzerdefinierte Header.
+* Funktionalität: Dieses Cmdlet, verfügbar ab Powershell Version 3, fungiert ähnlich wie `wget` oder `curl` unter Linux. Es sendet HTTP-, HTTPS- oder FTP-Anfragen an eine angegebene URL und kann die Antwort verarbeiten oder, mithilfe des Parameters `-OutFile`, direkt in eine Datei speichern. Es unterstützt komplexere Webinteraktionen wie Authentifizierung und benutzerdefinierte Header.
 * Anwendungsfälle & Risiken: Legitim für Web-Scraping, Herunterladen von Ressourcen oder Interaktion mit APIs. Wird von Angreifern häufig zum Herunterladen von Payloads verwendet, oft in Kombination mit `-OutFile`, um die Datei auf der Festplatte zu speichern, oder die Ausgabe wird an `Invoke-Expression` (IEX) weitergeleitet, um eine dateilose Ausführung zu erreichen. `Invoke-WebRequest` kann relativ langsam sein und hat eine potenzielle Abhängigkeit von Internet Explorer-Komponenten.
   
 * Sytaxbeispiel: 
@@ -77,7 +77,7 @@ Start-BitsTransfer -Source "http://..." -Destination "C:\..." -Asynchronous
 ```
 
 ## Verschleierungstechniken (MITRE ATT&CK T1027)
-Angreifer verschleiern PowerShell-Befehle und -Skripte, um signaturbasierte Erkennungssysteme zu umgehen und die Analyse zu erschweren. Gängige Methoden umfassen:   
+Angreifer verschleiern Powershell-Befehle und -Skripte, um signaturbasierte Erkennungssysteme zu umgehen und die Analyse zu erschweren. Gängige Methoden umfassen:   
 
 * Kodierung: Verwendung von Base64 (`-EncodedCommand`, `-e`, `-ec`), Hexadezimal oder ASCII zur Darstellung von Befehlen oder Skriptblöcken.   
 * Zeichenkettenmanipulation: Verketten (`"Down" + "loadString"`), Neuanordnen (`"{1}{0}" -f 'String','Download'`) oder Ersetzen von Zeichen innerhalb von Zeichenketten, um bekannte Muster zu zerlegen.   
@@ -104,7 +104,7 @@ Für einige dieser Methoden haben wir eine separate Query erstellt, um gezielt n
 ```
 
 ## Powershell Härtung implementieren
-* Constrained Language Mode: Wo immer möglich, schränken Sie PowerShell auf den Constrained Language Mode ein. Dies begrenzt den Zugriff auf sensible Cmdlets,.NET-Typen und die Ausführung von beliebigem Code, was viele Angriffstechniken erschwert.   
+* Constrained Language Mode: Wo immer möglich, schränken Sie Powershell auf den Constrained Language Mode ein. Dies begrenzt den Zugriff auf sensible Cmdlets,.NET-Typen und die Ausführung von beliebigem Code, was viele Angriffstechniken erschwert.   
 * Just Enough Administration (JEA): Implementieren Sie JEA, um administrative Berechtigungen auf das absolut notwendige Minimum für bestimmte Rollen und Aufgaben zu beschränken. Dies reduziert die Auswirkungen, falls ein privilegiertes Konto kompromittiert wird.   
 * Execution Policy: Setzen Sie die Ausführungsrichtlinie mindestens auf RemoteSigned oder AllSigned. Auch wenn dies keine undurchdringliche Sicherheitsbarriere darstellt, zwingt es Angreifer zur Verwendung von Bypass-Methoden (z.B. -ExecutionPolicy Bypass), deren Verwendung wiederum ein detektierbares Signal sein kann. Erzwingen Sie die Signierung für intern entwickelte Skripte.   
-* Application Control: Nutzen Sie Lösungen wie AppLocker, um die Ausführung von PowerShell-Skripten auf autorisierte Benutzer, Systeme oder signierte Skripte zu beschränken. Das vollständige Blockieren von powershell.exe ist aufgrund seiner legitimen Verwendung und der Möglichkeit, die Engine auch ohne die EXE-Datei zu nutzen, oft nicht praktikabel oder effektiv.   
+* Application Control: Nutzen Sie Lösungen wie AppLocker, um die Ausführung von Powershell-Skripten auf autorisierte Benutzer, Systeme oder signierte Skripte zu beschränken. Das vollständige Blockieren von powershell.exe ist aufgrund seiner legitimen Verwendung und der Möglichkeit, die Engine auch ohne die EXE-Datei zu nutzen, oft nicht praktikabel oder effektiv.   
