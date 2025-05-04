@@ -1,4 +1,15 @@
 # Powershell Command Length
+## Warum Powershell für Angreifer interessant ist
+
+Powershell ist ein fester Bestandteil moderner Windows-Systeme und bietet durch .NET-Anbindung mächtige Möglichkeiten zur Automatisierung. Diese Eigenschaften machen es auch für Angreifer attraktiv:
+
+- Auf jedem Windows-System vorhanden (kein zusätzlicher Code nötig)
+- Direkter Zugriff auf Windows-APIs und Netzwerkressourcen
+- Kann Code aus dem Speicher ausführen (fileless execution)
+- Oft unzureichend überwacht oder eingeschränkt
+
+**Living off the Land**-Taktiken nutzen Powershell, um Angriffe unauffällig und ohne zusätzliche Tools durchzuführen.
+
 ## Warum Abweichungen der Befehlslänge auf potenzielle Bedrohungen hinweisen 
 Angreifer verwenden häufig Methoden in Powershell, die zu ungewöhnlich langen Befehlszeilen führen. Das Überwachen von Abweichungen gegenüber der üblichen Befehlslänge kann daher ein wertvoller Ansatz zur Erkennung verdächtiger Aktivitäten sein.
 Ungewöhnlich lange Befehle können ein Indikator für einen Angriff sein.
@@ -10,7 +21,7 @@ Ungewöhnlich lange Befehle können ein Indikator für einen Angriff sein.
   * Einbetten von Payloads & Skripten: Einfügen ganzer Skripte oder binärer Payloads direkt in die Befehlszeile.   
   
 * Dateilose Ausführung & LotL: Fileless-Angriffe oder welche, die nur integrierte Werkzeuge verwenden (Living off the Land), verlassen sich oft auf komplexe, einzeilige Befehle, die an powershell.exe übergeben werden, um Payloads von entfernten Quellen herunterzuladen und auszuführen oder verkettete Aktionen durchzuführen. Diese komplexen Anweisungen führen naturgemäß zu längeren Befehlen.   
-* Offensive Frameworks: Werkzeuge wie Empire, PowerSploit, Cobalt Strike usw. nutzen PowerShell intensiv und generieren oft lange, verschleierte Befehle für ihre Payloads.   
+* Offensive Frameworks: Werkzeuge wie Empire, PowerSploit, Cobalt Strike usw. nutzen Powershell intensiv und generieren oft lange, verschleierte Befehle für ihre Payloads.   
 * Ungewöhnlich lange Befehle sind ein starker Indikator, da sie direkt mit gängigen Angreifertechniken zur Umgehung und Ausführung korrelieren ([T1027.010](https://attack.mitre.org/techniques/T1027/010/) Obfuscated Files or Information). Legitime administrative Aufgaben erfordern selten die extremen Längen, die oft durch die genannten Methoden erzeugt werden. Legitime Administratoren verwenden typischerweise Skriptdateien (.ps1) für komplexe Logik , nicht verschleierte Einzeiler. Angreifer verwenden lange, verschleierte Befehlszeilen genau deshalb, um das Schreiben von Dateien auf die Festplatte zu vermeiden (dateilose Ausführung) und um einfache Erkennungslogiken zu umgehen. Dieser Unterschied in der Betriebspraxis macht die Länge zu einem relativ nützlichen Unterscheidungsmerkmal.   
 
 
@@ -29,7 +40,7 @@ Ungewöhnlich lange Befehle können ein Indikator für einen Angriff sein.
 Die Kernidee besteht darin, darzustellen was "normale" Aktivität für die länge der ausgeführten Powershell-Befehle ist, und dann Abweichungen von dieser Norm zu identifizieren.   
 
 ## Erstellung der Baseline
-Die Abfrage analysiert historische PowerShell-Executions und die jeweiligen Befehlslängen über einen definierten Zeitraum.
+Die Abfrage analysiert historische Powershell-Executions und die jeweiligen Befehlslängen über einen definierten Zeitraum.
 Sie berechnet statistische Maße der zentralen Tendenz (z. B. Mittelwert, Median) und Streuung (z. B. Standardabweichung) für Befehlslängen während dieses Baseline-Zeitraums (implizit aus ). Dies definiert den erwarteten Bereich der Befehlslängen.   
 
 ## Zeitraum: 7-Tage-Baseline
