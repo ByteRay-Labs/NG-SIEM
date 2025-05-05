@@ -1,4 +1,14 @@
 # Powershell Obfuscation 
+
+## Warum Powershell für Angreifer interessant ist
+
+Powershell ist ein fester Bestandteil moderner Windows-Systeme und bietet durch .NET-Anbindung mächtige Möglichkeiten zur Automatisierung. Diese Eigenschaften machen es auch für Angreifer attraktiv:
+
+- Auf jedem Windows-System vorhanden (kein zusätzlicher Code nötig)
+- Direkter Zugriff auf Windows-APIs und Netzwerkressourcen
+- Kann Code aus dem Speicher ausführen (fileless execution)
+- Oft unzureichend überwacht oder eingeschränkt
+
 ## Warum Encoded Powershell ein Risiko darstellt
 Angreifer codieren PowerShell-Befehle um Sicherheitsmechanismen zu umgehen:
 
