@@ -76,14 +76,14 @@ Für einige dieser Methoden haben wir eine separate Query erstellt, um gezielt n
 
 ## CrowdStrike NextGen SIEM Query
 ```
-#event_simpleName=ProcessRollup2 event_platform=Win
-| ImageFileName=/\\(powershell(_ise)?|pwsh)\.exe/i
-| CommandLine=/Invoke\-WebRequest|Net\.WebClient|Start\-BitsTransfer/i
-| regex("(?<URL>https?://[^'\"]+)", field=CommandLine)
-| replace("https://", with="", field=Domain, as=vt_lookup)
-| UrlBase:="https://www.virustotal.com/gui/domain/"
-| format(format="[Virustotal](%s%s)", field=[UrlBase, vt_lookup], as=DomainLookup)
-| table([DomainLookup, URL, ComputerName, UserName, CommandLine], limit=20000)
+#event_simpleName=CommandHistory
+| CommandHistory=/Invoke\-WebRequest|Net\.WebClient|Start\-BitsTransfer/i
+| regex("(?<URL>https?://[^'\"]+)", field=CommandHistory)
+| replace("https://", with="", field=URL, as=ShortURL)
+| replace("\/.*", with="", field=ShortURL, as=otx_lookup)
+| UrlBase:="https://otx.alienvault.com/indicator/domain/"
+| format(format="[Alienvault](%s%s)", field=[UrlBase, otx_lookup], as=DomainLookup)
+| table([DomainLookup, URL, ComputerName, UserName, CommandHistory], limit=20000)
 ```
 
 ## Powershell Härtung implementieren
