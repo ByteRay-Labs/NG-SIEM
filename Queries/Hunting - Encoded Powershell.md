@@ -44,13 +44,22 @@ Powershell erlaubt es, Parameter in vollständig ausgeschriebener Form (z. B. 
 |-^e^n^c	| Beispiel für eine Caret Interruption|
 
 ``` Powershell Encoding
-# Beispiel für die Codierung eines Befehls
-$command = 'Get-ChildItem -Path "C:\Program Files" -Recurse'
-$bytes =::Unicode.GetBytes($command)
-$encodedCommand = [Convert]::ToBase64String($bytes)
+# Der ursprüngliche Befehl
+$command = "ping 8.8.8.8"
+
+# 1. String in Bytes umwandeln (unter Verwendung von UTF-16LE)
+$bytesUtf16le = [System.Text.Encoding]::Unicode.GetBytes($command)
+
+# 2. Bytes in einen Base64-String umwandeln
+$base64CommandUtf16le = [System.Convert]::ToBase64String($bytesUtf16le)
+
+# Ausgabe
+Write-Host "Ursprünglicher Befehl: $command"
+Write-Host "Bytes (UTF-16LE) als Hex-String: $($bytesUtf16le | ForEach-Object { $_.ToString('X2') })"
+Write-Host "Base64-kodierter Befehl (aus UTF-16LE Bytes): $base64CommandUtf16le"
 ```
 Ausgeführt wird das encodierte Kommando dann in Base64:
-```
+``` Powershell
 powershell.exe -EncodedCommand $encodedCommand
 ```
 
