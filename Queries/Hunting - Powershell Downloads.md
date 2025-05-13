@@ -86,6 +86,9 @@ Für einige dieser Methoden haben wir eine separate Query erstellt, um gezielt n
 | table([DomainLookup, URL, ComputerName, UserName, CommandHistory], limit=20000)
 ```
 
+## Erwartete Ausgabe
+<img width="1801" alt="Image" src="https://github.com/user-attachments/assets/35061f05-8529-4220-b3f1-af448c74389d" />
+
 ## Powershell Härtung implementieren
 * Constrained Language Mode: Wo immer möglich, schränken Sie Powershell auf den Constrained Language Mode ein. Dies begrenzt den Zugriff auf sensible Cmdlets,.NET-Typen und die Ausführung von beliebigem Code, was viele Angriffstechniken erschwert.   
 * Just Enough Administration (JEA): Implementieren Sie JEA, um administrative Berechtigungen auf das absolut notwendige Minimum für bestimmte Rollen und Aufgaben zu beschränken. Dies reduziert die Auswirkungen, falls ein privilegiertes Konto kompromittiert wird.   
