@@ -67,30 +67,34 @@ powershell.exe -EncodedCommand $encodedCommand
 Im Rahmen unserer Arbeit mit CrowdStrike NG-SIEM und LogScale haben wir eine bestehende [Query](https://www.reddit.com/r/crowdstrike/comments/xm7lsn/20220923_cool_query_friday_logscale_humio/?rdt=54594) zur Erkennung von obfuskierten PowerShell-Kommandos übernommen und erweitert. 
 
 ```
-//Get Powershell, Powershell_ise and pwsh events
+//Get Powershell and pwsh events
 #event_simpleName=ProcessRollup2 
 | event_platform=Win 
-| ImageFileName=/\\(powershell(_ise)?|pwsh)\.exe/i
+| ImageFileName=/\\(powershell|pwsh)\.exe/i
 //Search for "-EncodeCommand" and variations   
-| CommandLine=/\s-[eE^]{1,2}[ncodema^]*\s(?<base64String>\S+)/i
 | groupby([ParentBaseFileName, CommandLine], function=stats([count(aid, distinct=true, as="uniqueEndpointCount"), count(aid, as="executionCount")]), limit=max)
 //Set endpoint prevalence threshold
 | uniqueEndpointCount < 3
 //Calculating command length & Isolate Base64 sting
 | cmdLength := length("CommandLine")
-| CommandLine=/\s-[eE^]{1,2}[ncodema^]*\s(?<base64String>\S+)/i
+//| CommandLine=/\s(|[\^])-(|[\^])[e]{1,2}[ncodema^]*\s(?<base64String>\S+)|^/i
+//| CommandLine=/\s-[eE^]{1,2}[ncodema^]*\s(?<base64String>\S+)/i
+| CommandLine=/\s(|[\^])-(|[\^])[e]{1,2}[ncodema^]*\s(?<base64String>\S+)/i
+//| replace("^", with="", field=base64String, as=CleanBase64String)
 //Get Entropy of Base64 String
-| b64Entroy := shannonEntropy("base64String")
+| b64Entropy := shannonEntropy("base64String")
 // Set entropy threshold
-| b64Entroy > ?EntropyGreaterThan
+| b64Entropy > ?EntropyGreaterThan
 //Decode encoded command blob
 | decodedCommand := base64Decode(base64String, charset="UTF-16LE")
 //Outputting to table
- | table([ParentBaseFileName, uniqueEndpointCount, executionCount, cmdLength,  b64Entroy, decodedCommand])
+| table([ParentBaseFileName, uniqueEndpointCount, executionCount, cmdLength,  b64Entropy, decodedCommand, CommandLine])
 //Uncomment next line to search URLs in the decoded command
 //| decodedCommand=/https?/i
 //Uncomment next line to search IP:Port in the decoded command 
 //|regex("(?<ip>[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\:(?<port>\d{2,5})", field=decodedCommand)
 //Uncomment next line to search IP in the decoded command 
-//|regex("(?<ip>[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\"", field=decodedCommand)
+//|regex("(?<ip>[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})", field=decodedCommand)
 ```
+## Erwartete Ausgabe
+<img width="2343" alt="Image" src="https://github.com/user-attachments/assets/72cc5ce1-a396-4e32-a8f0-6952fe586473" />
