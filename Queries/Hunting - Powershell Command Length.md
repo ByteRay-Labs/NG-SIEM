@@ -41,11 +41,12 @@ Die Kernidee besteht darin, darzustellen was "normale" Aktivität für die läng
 
 ## Erstellung der Baseline
 Die Abfrage analysiert historische Powershell-Executions und die jeweiligen Befehlslängen über einen definierten Zeitraum.
-Sie berechnet statistische Maße der zentralen Tendenz (z. B. Mittelwert, Median) und Streuung (z. B. Standardabweichung) für Befehlslängen während dieses Baseline-Zeitraums (implizit aus ). Dies definiert den erwarteten Bereich der Befehlslängen.   
+Sie berechnet statistische Maße der zentralen Tendenz (in diesem Fall der Mittelwert) für Befehlslängen während dieses Baseline-Zeitraums. Dies definiert den erwarteten Bereich der Befehlslängen.   
 
 ## Zeitraum: 7-Tage-Baseline
 * Erfassung wöchentlicher Zyklen: Viele organisatorische Arbeitsabläufe und administrative Aufgaben folgen wöchentlichen Mustern (z. B. unterschiedliche Aktivitäten an Wochentagen vs. Wochenenden, wöchentliche Berichte, Patching-Zeitpläne). Eine 7-Tage-Baseline reicht oft aus, um diese typischen Rhythmen zu erfassen.   
-* Stabilität vs. Anpassungsfähigkeit: der gewählte Zeitraum ist eine Balance. Kürzere Baselines (z. B. 24 Stunden) können übermäßig empfindlich auf tägliche Schwankungen reagieren. Längere Baselines passen sich möglicherweise zu langsam an legitime Verhaltensänderungen an oder riskieren, vergangene Anomalien in das "normale" Profil zu integrieren. * Ein 7-Tage-Fenster glättet tägliche Variationen und bleibt gleichzeitig einigermaßen anpassungsfähig. 
+* Stabilität vs. Anpassungsfähigkeit: der gewählte Zeitraum ist eine Balance. Kürzere Baselines (z. B. 24 Stunden) können übermäßig empfindlich auf tägliche Schwankungen reagieren. Längere Baselines passen sich möglicherweise zu langsam an legitime Verhaltensänderungen an oder riskieren, vergangene Anomalien in das "normale" Profil zu integrieren.
+* Ein 7-Tage-Fenster glättet tägliche Variationen und bleibt gleichzeitig einigermaßen anpassungsfähig. 
 Die Wahl einer 7-Tage-Baseline ist eine bewusste Abwägung, die darauf abzielt, das Signal/Rausch Verhältnis für die Erkennung von Anomalien im Zusammenhang mit wöchentlichen menschlichen/systemischen Verhaltensmustern zu maximieren. Geschäfts- und IT-Betriebe haben oft wöchentliche Rhythmen. Ein Server könnte bestimmte Wartungsskripte nur am Wochenende ausführen, oder Benutzer könnten bestimmte Aufgaben nur montags erledigen. Wenn am Mittwoch ein sehr langer Befehl auftaucht, aber ähnliche lange Befehle jeden Samstag aufgrund von Backups normal sind, hilft die 7-Tage-Baseline dabei, das potenziell anomale Ereignis am Mittwoch vom normalen Ereignis am Samstag zu unterscheiden. Dies reduziert Fehlalarme im Vergleich zu einer kürzeren Baseline, die den wöchentlichen Kontext nicht erfasst.
 * Anpassung an die betriebliche Realität: Je nach Umgebung kann eine Anpassung des Zeitraums für bessere Ergebnisse sorgen.
 
