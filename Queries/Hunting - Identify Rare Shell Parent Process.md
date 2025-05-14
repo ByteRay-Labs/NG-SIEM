@@ -81,7 +81,7 @@ Eine wichtige verwandte Evasionstechnik ist "Powershell without Powershell". Hie
 
 ## CrowdStrike NextGen SIEM Query
 ```
-#event_simpleName = /processrollup2/i event_platform=Win
+#event_simpleName = ProcessRollup2 event_platform=Win
 | ImageFileName = /(\\Device\\HarddiskVolume\d+)?(?<FilePath>(\\|\/).*(\\|\/))(?<FileName>.+)$/
 | format(format="[%s] > %s", field=[ParentBaseFileName, FileName], as=processLineage)
 | FileName=?FileName
