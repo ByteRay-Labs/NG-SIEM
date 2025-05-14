@@ -32,7 +32,7 @@ Ein zentraler Treiber für viele dieser Szenarien ist die Evasion. Techniken wie
 Die Beobachtung von alternativen, ungewöhnlichen Parent-Prozessen wird somit zu einer neuen Erkennungsmöglichkeit. Darüber hinaus kann ein einzelner ungewöhnlicher Parent-Prozess auf mehrere Angriffsziele gleichzeitig hindeuten. 
 Beispielsweise kann `wmiprvse.exe` als Parent-Prozess von Powershell auf eine Erstausführung via WMI, auf Persistenz durch ein WMI-Ereignisabonnement oder auf Lateral Movement durch Remote-WMI-Ausführung hinweisen. WMI ist ein vielseitiges Werkzeug für Angreifer und erfordert die Beobachtung der Kette `wmiprvse.exe -> powershell.exe` für eine weitergehende Untersuchung (Analyse der Kommandozeile, WMI-Protokolle, Netzwerkverbindungen), um die spezifische Angriffsaktivität zu bestimmen.
 
-## Häufige legitime Powershell-Elternprozesse
+## Häufige legitime Powershell-Parents
 Um Anomalien erkennen zu können, ist es wichtig, den Normalzustand zu verstehen. Powershell wird in vielen administrativen und interaktiven Szenarien legitim gestartet. Die folgenden Elternprozesse sind typischerweise unbedenklich:
 
 * `explorer.exe` (Windows Explorer): Dies ist der häufigste Parent-Prozess für interaktive Powershell-Sitzungen. Er tritt auf, wenn ein Benutzer Powershell über das Startmenü, oder Ausführen (Win + R), die Adressleiste des Explorers oder durch Klicken auf eine `.ps1`-Skriptdatei startet.   
@@ -81,14 +81,15 @@ Eine wichtige verwandte Evasionstechnik ist "Powershell without Powershell". Hie
 
 ## CrowdStrike NextGen SIEM Query
 ```
-// Hunting for Rare Parent Process to Windows Shell with Enrichment
-#event_simpleName=ProcessRollup2 event_platform=Win
-| case { in(field=FileName, values=["powershell.exe", "powershell_ise.exe", "cmd.exe", "pwsh.exe"]) | IsChild := "1"; * | IsChild := "0" }
-| case { IsChild = "1" | ProcId := ParentProcessId | ChildProcess := FileName | ChildCommandLine := CommandLine;
-IsChild = "0" | ProcId := TargetProcessId | ParentCommandLine := CommandLine | ParentFileName := FileName | ParentFilePath := FilePath | ParentSHA256HashData := SHA256HashData; }
-| groupBy([ComputerName, ProcId], function=([count(ParentProcessId, distinct=true, as=EventCount), collect([ParentFileName, ParentSHA256HashData, ParentFilePath, ParentCommandLine, ChildProcess]), collect(ChildCommandLine, limit=4)]), limit=max)
-| EventCount > 1
-| groupBy([ParentSHA256HashData], function=([collect([aid, ParentFileName, ParentFilePath, ParentCommandLine, ChildProcess, ChildCommandLine]), count(ComputerName, as=HostCount)]))
-| HostCount < 5
-| sort([HostCount, ParentFileName], order=asc)
+#event_simpleName = /processrollup2/i event_platform=Win
+| ImageFileName = /(\\Device\\HarddiskVolume\d+)?(?<FilePath>(\\|\/).*(\\|\/))(?<FileName>.+)$/
+| format(format="[%s] > %s", field=[ParentBaseFileName, FileName], as=processLineage)
+| FileName=?FileName
+| groupBy([processLineage], function=([count(aid, as=executionCount), min("ProcessStartTime, as=firstRun"), max("ProcessStartTime", as=lastRun)]))
+| formatTime(format="%c", field=firstRun, as="firstRun")
+| formatTime(format="%c", field=lastRun, as="lastRun")
+| sort(executionCount, order=desc)
 ```
+## Erwartete Ausgabe
+
+<img width="818" alt="Image" src="https://github.com/user-attachments/assets/0f192fdb-c59f-4785-baee-664994d32e6c" />
