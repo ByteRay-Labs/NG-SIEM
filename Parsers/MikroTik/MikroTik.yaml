@@ -1,0 +1,107 @@
+name: MikroTik
+fieldsToBeRemovedBeforeParsing: []
+testCases:
+- event:
+    rawString: '2025-06-04T22:43:30.547+0200 MikroTik CEF:0|MikroTik|L009UiGS|7.18.2 (stable)|16|dhcp,info|Low|dvchost=router01 dvc=192.168.1.1 msg=dhcp-test assigned 192.168.1.2 for B2:D8:4C:87:59:2C PC-Tom'
+- event:
+    rawString: '2025-06-04T22:06:59.401+0200 MikroTik CEF:0|MikroTik|L009UiGS|7.18.2 (stable)|10|system,error,critical|High|dvchost=router01 dvc=192.168.1.1 msg=login failure for user admin from 192.168.1.162 via winbox'
+- event:
+    rawString: '2025-06-04T21:58:46.608+0200 MikroTik CEF:0|MikroTik|L009UiGS|7.18.2 (stable)|10|system,info,account|Low|dvchost=router01 dvc=192.168.1.1 msg=user admin logged in from 192.168.1.162 via winbox'
+- event:
+    rawString: '2025-06-04T21:28:05.055+0200 MikroTik CEF:0|MikroTik|L009UiGS|7.18.2 (stable)|16|dhcp,info|Low|dvchost=router01 dvc=192.168.1.1 msg=dhcp-test assigned 192.168.10.175 for 7C:BB:8A:89:72:8C'
+- event:
+    rawString: '2025-06-04T20:56:19.741+0200 MikroTik CEF:0|MikroTik|L009UiGS|7.18.2 (stable)|8|firewall,info|Low|dvchost=router01 dvc=192.168.1.1 msg=drop forward: in:lab-1 out:local-bridge, connection-state:new src-mac bc:24:11:a1:b6:c8, proto TCP (SYN), 192.168.1.10:55672->192.168.50.10:8080, len 52'
+- event:
+    rawString: '2025-05-21T20:41:34.857+0200 MikroTik CEF:0|MikroTik|L009UiGS|7.18.2 (stable)|10|system,info|Low|dvchost=router01 dvc=192.168.1.1 msg=log rule added by tcp-msg(winbox):admin@192.168.1.12 (*C \= /system logging add action\=memory disabled\=no prefix\="" regex\="" topics\=critical)'
+$schema: https://schemas.humio.com/parser/v0.3.0
+script: |-
+  // #region PREPARSE
+  /************************************************************
+  ****** Parse timestamp and initial CEF extraction
+  ************************************************************/
+  parseCEF(field=@rawstring)
+  | regex("^(?<ts>[^ ]+)")
+  | @timestamp := findTimestamp(timezone="UTC", field=ts)
+  | drop(ts)
+
+  // #endregion
+
+  // #region METADATA
+  /************************************************************
+  ****** Static Metadata Definitions
+  ************************************************************/
+
+  | Parser.version := "0.0.1"
+  | ecs.version := "8.11.0"
+  | Cps.version := "1.0.0"
+  | Vendor := "mikrotik" | drop(cef.device.vendor)
+  | event.module := "router"
+  | event.kind := "event"
+  | event.dataset := "mikrotik.router"
+
+  // #endregion
+
+  // #region NORMALIZATION
+  /************************************************************
+  ****** Normalize fields to data model
+  ************************************************************/
+
+  // Map standard fields
+  | host.ip := cef.ext.dvc
+  | host.name := cef.ext.dvchost
+  | host.type :=  cef.device.product
+  | host.os.version := cef.device.version
+  | message := cef.ext.msg
+  | mikrotik.topic := splitString(cef.name,by=",")
+
+  // Droping old field names
+  | drop([cef.ext.dvc,cef.ext.dvchost,cef.device.product,cef.device.version,cef.ext.msg,cef.name])
+
+  // Set event categorization based on event name
+  | case {
+      // Firewall Events - Log Prefix needs to be set within the firewall rule to get the action (drop,accept,etc)
+      array:contains("mikrotik.topic[]",value="firewall")
+          | event.category[0] := "network"
+          | event.type[0] := "connection";
+
+      // DHCP events
+      array:contains("mikrotik.topic[]",value="dhcp")
+          | event.category[0] := "network"
+          | event.type[0] := "protocol"
+          | network.protocol := "dhcp"
+          | message =~/(?<dhcp.server>.*)\sassigned\s(?<dhcp.assgined.ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\sfor\s(?<client.mac>([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2}))\s(?<client.name>.*)/i ;
+
+      // Successful Logins
+      array:contains("mikrotik.topic[]",value="account")
+          | event.category[0] := "authentication"
+          | event.type[0] := "info"
+          | event.outcome := "success"
+          | message =~ /user\s(?<user.name>.*)\slogged\sin\sfrom\s(?<source.ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\svia\s(?<network.application>.*)/i ;
+
+      // Failed Logins
+      array:exists(array="mikrotik.topic[]", condition=in(mikrotik.topic, values=["system", "error", "critical"]))
+          | event.category[0] := "authentication"
+          | event.type[0] := "info"
+          | event.outcome := "failure"
+          | message =~ /login\sfailure\sfor\suser\s(?<user.name>.*)\sfrom\s(?<source.ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\svia\s(?<network.application>.*)/i ;
+
+      //array:contains("mikrotik.topic[]",value="system")
+      //    | event.category[0] := "configuration"
+      //    | event.type[0] := "info";
+
+      // Fallback
+      *
+      | event.category[0] := "host"
+      | event.type[0] := "info";
+  }
+
+  // #endregion
+tagFields:
+- Cps.version
+- Vendor
+- ecs.version
+- event.dataset
+- event.kind
+- event.module
+- event.outcome
+- observer.type
