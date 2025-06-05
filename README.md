@@ -1,29 +1,38 @@
 ![Image](https://github.com/user-attachments/assets/e9b7cd77-dc64-46c7-82b8-c5b652acdc60)
 
-# Willkommen bei ByteRay Labs
-Hier teilen wir praxisbewährte Inhalte wie etwa SIEM-Queries aus unserem umfassenden Use-Case-Katalog, die wir in verschiedensten Kundenumgebungen erfolgreich getestet und validiert haben.
-Wir möchten die tägliche Arbeit von Security-Teams erleichtern und die Effektivität von CrowdStrike NG-SIEM bzw. Falcon LogScale in realen Einsatzszenarien steigern. Unser Schwerpunkt liegt dabei auf Detection Engineering und Threat Hunting. 
+# Welcome to ByteRay Labs
 
-## Powershell Hunting Queries
-Im Rahmen unserer Arbeit mit CrowdStrike NextGen SIEM haben wir ein Set von spezialisierten Powershell-Hunting-Queries veröffentlicht. Diese helfen dabei, verdächtige Aktivitäten im Umfeld von PowerShell effektiv zu identifizieren und einzuordnen.
+Here we share practical, field-tested content such as SIEM queries from our comprehensive use-case catalog, which we have successfully validated across a wide range of customer environments.  
 
-Die veröffentlichten Queries decken folgende Szenarien ab:
+Our goal is to simplify the daily work of security teams and enhance the effectiveness of CrowdStrike NG-SIEM and Falcon LogScale in real-world scenarios. We focus on **Detection Engineering** and **Threat Hunting**.
 
-* Powershell Downloads: Erkennung von Datei-Downloads über Powershell-Skripte.
-* Powershell Obfuscation: Aufdeckung verschleierter Powershell-Befehle zur Umgehung von Detection-Mechanismen.
-* Rare Powershell Parents: Analyse ungewöhnlicher Parent-Prozesse, die Powershell aufrufen.
-* Suspicious Powershell Command Length: Erkennung ungewöhnlich langer Befehlszeilen als Hinweis auf verdächtige Aktivitäten.
+---
 
-Alle Queries stammen aus realitätsnahen Use-Cases und wurden erfolgreich in unterschiedlichen Kundenumgebungen getestet. Sie bieten einen schnellen Einstieg in effektives Threat Hunting mit Fokus auf Powershell-Missbrauch.
+## PowerShell Hunting Queries
 
-## SIEM Professional Services von ByteRay
-Neben dem kostenlosen Wissenstransfer hier auf Github bieten wir auch Professional & Managed Services an.
+As part of our work with CrowdStrike NextGen SIEM, we have published a set of specialized PowerShell hunting queries. These help identify and assess suspicious activity involving PowerShell effectively.
 
-Unsere Leistungen umfassen u.a.:
-* SIEM-Strategieberatung & Architekturdesign
-* Custom Use-Case Development
-* Onboarding & Enablement
-* Detection Engineering und Threat Hunting
-* Managed SIEM Operations
+The released queries cover the following scenarios:
 
-www.byteray.com
+* **PowerShell Downloads**: Detecting file downloads initiated via PowerShell scripts.  
+* **PowerShell Obfuscation**: Identifying obfuscated PowerShell commands intended to bypass detection mechanisms.  
+* **Rare PowerShell Parents**: Analyzing uncommon parent processes that launch PowerShell.  
+* **Suspicious PowerShell Command Length**: Detecting unusually long command lines that may indicate malicious behavior.
+
+All queries are based on realistic use cases and have been successfully tested in different customer environments. They provide a fast and effective entry point for threat hunting focused on PowerShell misuse.
+
+---
+
+## SIEM Professional Services by ByteRay
+
+In addition to sharing our knowledge freely here on GitHub, we also offer Professional & Managed Services.
+
+Our services include:
+
+* SIEM strategy consulting & architecture design  
+* Custom use-case development  
+* Onboarding & enablement  
+* Detection engineering and threat hunting  
+* Managed SIEM operations  
+
+Visit us at: [www.byteray.com](https://www.byteray.com)
