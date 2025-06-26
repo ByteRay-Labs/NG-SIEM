@@ -12,6 +12,8 @@ When creating a honeytoken account, the main objectives are:
 
 Attackers are increasingly aware of honeytoken techniques and often attempt to avoid triggering them. To increase the chances of engagement, it’s essential to ensure honeytoken accounts follow the same naming conventions and patterns as legitimate user accounts within your organization.
 
+Honeytokens within Falcon Identity Protection -> https://supportportal.crowdstrike.com/s/article/ka16T000001MfykQAC
+
 ## 3. Data Sources
 **Primary Data Source:** CrowdStrike Falcon Identity events (`event_simpleName=/UserLogon.*/i`)
 
