@@ -1,5 +1,5 @@
 ## 1. Hunting - Use of DoH (DNS over HTTPS)
-Detection of DoH traffik to known DoH-providers
+Detection of DoH traffic to known DoH-providers
 
 ## 2. Data Sources
 Primary Data Source: CrowdStrike Falcon DNS events (#event_simpleName = DnsRequest).
